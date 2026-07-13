@@ -269,6 +269,105 @@ table.timeline td:first-child{font-family:var(--mono);color:var(--flow-deep);whi
 .filter-pill{font-family:var(--mono);font-size:12px;padding:8px 16px;border:1px solid var(--line);color:var(--text-soft);cursor:pointer;transition:all .15s ease;background:transparent;}
 .filter-pill:hover, .filter-pill.active{border-color:var(--flow-deep);color:var(--flow-deep);background:var(--paper-raised);}
 
+/* -------------------- submission form -------------------- */
+.submit-form{max-width:820px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px 24px;margin-bottom:28px;}
+.field{display:flex;flex-direction:column;gap:7px;}
+.field-wide{grid-column:1 / -1;}
+.field label{font-family:var(--mono);font-size:12px;letter-spacing:.03em;color:var(--text-soft);}
+.field input[type=text], .field input[type=email], .field select, .field textarea, .field input[type=file]{
+  font-family:var(--body);font-size:14.5px;padding:11px 13px;border:1px solid var(--line);
+  background:var(--paper-raised);color:var(--text);width:100%;
+}
+.field input:focus, .field select:focus, .field textarea:focus{outline:none;border-color:var(--flow-deep);}
+.field textarea{resize:vertical;font-family:var(--body);}
+.checkbox-field label{flex-direction:row;align-items:flex-start;gap:10px;font-family:var(--body);font-size:13.5px;color:var(--text-soft);}
+.checkbox-field input{margin-top:3px;width:auto;}
+.form-status{margin-top:16px;font-family:var(--mono);font-size:13px;min-height:16px;}
+.form-status.success{color:var(--flow-deep);}
+.form-status.error{color:var(--alert);}
+#submit-btn:disabled{opacity:.6;cursor:not-allowed;}
+@media (max-width:640px){.form-grid{grid-template-columns:1fr;}}
+
+/* -------------------- scroll progress bar (the "gauge level") -------------------- */
+#scroll-progress{
+  position:fixed;top:0;left:0;height:2.5px;width:0%;
+  background:linear-gradient(90deg,var(--flow-deep),var(--flow));
+  box-shadow:0 0 8px var(--flow-glow);
+  z-index:100;transition:width .08s linear;
+}
+
+/* header gains weight once page is scrolled */
+.site-header{transition:box-shadow .3s ease, background .3s ease;}
+.site-header.scrolled{
+  box-shadow:0 1px 0 var(--ink-line), 0 12px 24px -12px rgba(0,0,0,0.45);
+  background:rgba(14,21,18,0.98);
+}
+
+/* -------------------- cursor spotlight on instrument sections -------------------- */
+.hero, .cta-banner, .page-hero, .confluence{position:relative;}
+.hero::before, .cta-banner::before, .page-hero::before, .confluence::before{
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(480px circle at var(--mx,50%) var(--my,20%), rgba(31,203,178,0.10), transparent 65%);
+  opacity:0;transition:opacity .4s ease;
+}
+.hero:hover::before, .cta-banner:hover::before, .page-hero:hover::before, .confluence:hover::before{opacity:1;}
+.hero > *, .cta-banner > *, .page-hero > *{position:relative;z-index:1;}
+
+/* faint grain for tactile depth on dark panels */
+.hero::after, .cta-banner::after, .page-hero::after, .site-footer::before{
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:0;opacity:.5;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+}
+.site-footer{position:relative;overflow:hidden;}
+.site-footer::before{opacity:.35;}
+.site-footer > *{position:relative;z-index:1;}
+
+/* -------------------- hero load-in -------------------- */
+.hero-inner > *{animation:fadeUp .7s cubic-bezier(.2,.7,.2,1) both;}
+.hero-inner .eyebrow{animation-delay:.05s;}
+.hero-inner h1{animation-delay:.12s;}
+.hero-inner .lede{animation-delay:.22s;}
+.hero-inner .hero-actions{animation-delay:.32s;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+
+/* -------------------- SVG draw-in (hydrograph + sparklines) -------------------- */
+.gauge-svg polyline, .trib-spark polyline{
+  stroke-dasharray:1;stroke-dashoffset:1;
+  animation:draw 1.6s cubic-bezier(.2,.7,.2,1) forwards;
+}
+.gauge-svg polyline{animation-delay:.3s;}
+@keyframes draw{to{stroke-dashoffset:0;}}
+
+/* gauge-panel scanning sweep, like an oscilloscope */
+.gauge-panel{overflow:hidden;}
+.gauge-panel::before{
+  content:"";position:absolute;top:20px;bottom:44px;width:60px;
+  background:linear-gradient(90deg, transparent, rgba(31,203,178,.14), transparent);
+  animation:sweep 5s ease-in-out infinite;pointer-events:none;
+}
+@keyframes sweep{0%{left:-10%;}50%{left:100%;}100%{left:-10%;}}
+
+/* -------------------- richer hover states -------------------- */
+.btn-primary{position:relative;overflow:hidden;}
+.btn-primary:hover{box-shadow:0 6px 20px -6px var(--flow-glow);}
+.hero .btn-primary:hover, .page-hero .btn-primary:hover, .cta-banner .btn-primary:hover{box-shadow:0 6px 24px -4px rgba(31,203,178,.45);}
+
+.trib-card{position:relative;transition:background .25s ease, transform .25s ease, box-shadow .25s ease;}
+.trib-card:hover{transform:translateY(-3px);box-shadow:0 14px 30px -18px rgba(12,139,121,.5);z-index:2;}
+.trib-card:hover .trib-spark polyline{stroke:var(--flow);}
+.trib-card:hover .trib-code .dot{box-shadow:0 0 0 4px var(--flow-glow), 0 0 10px var(--flow);}
+
+.value-card, .dispatch{transition:transform .25s ease, box-shadow .25s ease;}
+.value-card:hover{transform:translateY(-2px);}
+.dispatch:hover{background:var(--paper-raised);}
+
+.stop::before{transition:box-shadow .25s ease, transform .25s ease;}
+.stop:hover::before{box-shadow:0 0 0 5px var(--flow-glow);transform:scale(1.15);}
+
+/* count-up stat numbers */
+.confluence-num{font-variant-numeric:tabular-nums;}
+
 /* scroll reveal */
 .reveal{opacity:0;transform:translateY(14px);transition:opacity .6s ease, transform .6s ease;}
 .reveal.in{opacity:1;transform:translateY(0);}
